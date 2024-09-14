@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU and Memory Usage</title>
+    <script src="/static/js/chart.js"></script>
+    <style>
+        canvas{border:1px dashed #ccc;}
+    </style>
+</head>
+<body>
+    <canvas id="usageChart" width="600" height="400"></canvas>
+    
+    <script>
+        async function fetchUsageData() {
+            var host_ip="{{host_ip}}";
+            var url='/api/usage_data';
+            if("" != host_ip){
+                url += "?ip="+host_ip
+            }
+            
+            const response = await fetch(url);
+            const data = await response.json();
+            // 数据格式转换
+            var object={
+                timestamp:[],
+                cpu_usage:[], 
+                memory_usage:[],
+                
+                host_ip:[], 
+                hostname:[]
+            };
+            for(var i=0; i<data.length; i++){
+                object["timestamp"].push(data[i].timestamp)
+                object["cpu_usage"].push(data[i].cpu_usage)
+                object["memory_usage"].push(data[i].memory_usage)
+                object["host_ip"].push(data[i].host_ip)
+                object["hostname"].push(data[i].hostname)
+            }
+                        
+            return object;
+        }
+
+        function createChart(data) {
+            const ctx = document.getElementById('usageChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'line',
+                //绘图区
+                data: {
+                    labels: data.timestamp,
+                    datasets: [
+                        {
+                            label: 'CPU Usage (%)',
+                            data: data.cpu_usage,
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 2,
+                            fill: false
+                        },
+                        {
+                            label: 'Memory Usage (%)',
+                            data: data.memory_usage,
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 2,
+                            fill: false
+                        }
+                    ]
+                },
+                
+                options: {
+                    responsive: true,
+                    // 坐标轴
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Time',
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Usage (%)'
+                            },
+                            beginAtZero: true,
+                            min:0,
+                            max:100
+                        }
+                    },
+
+                    // 图标题
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: data.hostname[0], // 主标题
+                            font: {
+                                size: 20 // 主标题字体大小
+                            }
+                        },
+                        subtitle: {
+                            display: true,
+                            text: data.host_ip[0], // 子标题
+                            font: {
+                                color: 'rgba(54, 162, 235, 1)',
+                                size: 16 // 子标题字体大小
+                            }
+                        },
+
+                        legend: {
+                            //strokeStyle: 'rgba(54, 162, 235, 100)',
+                            display: true // 显示图例
+                        }
+                    },
+
+                }
+            });
+        }
+
+        fetchUsageData().then(createChart);
+    </script>
+</body>
+</html>
