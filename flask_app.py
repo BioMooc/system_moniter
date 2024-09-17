@@ -16,7 +16,8 @@ MYSQL_DATABASE = 'monitoring'
 
 @app.route('/', methods = ["GET"])
 def index():
-    return render_template("index.html")
+    version="0.0.1"
+    return render_template("index.html", version=version)
 
 
 

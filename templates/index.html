@@ -6,25 +6,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monitor of CPU and Memory Usage</title>
     <script src="/static/js/chart.js"></script>
-    <style>
-         .iframe-container {
-            width: 45%;
-            height: 460px;
-            border: 1px solid #ccc;
-            margin-bottom: 20px;
-            float:left;
-            margin-left:20px;
-        }
-        .iframe-container iframe{
-            border: none;
-        }
-    </style>
+    <link href="/static/css/style.css" rel="stylesheet"></link>
 </head>
 <body>
     <h1>Monitor of CPU and Memory Usage</h1>
     <p>Show last 3 hours, 1 dot / 6 min.</p>
+    <div id="monitor"></div>
+
+
+    <div class="footer">
+        <p><a target="_blank" href="https://gitee.com/dawnEve/system_moniter" title="监控局域网中若干服务器的CPU和内存使用状况。">Fork Me</a></p>
+        <p>
+            <span>system_moniter version:{{version}}</span>
+            | <span>&copy; <a target="_blank" href="https://github.com/biomooc">BioMooc 2024</a> </span>
+        </p>
+    </div>
     
     <script>
+        var oMonitor=document.getElementById("monitor");
         async function fetchUsageData() {
             var url='/api/usage_data';
             
@@ -46,7 +45,7 @@
                 object["host_ip"].push(data[i].host_ip)
                 object["hostname"].push(data[i].hostname)
             }
-                        
+
             return object;
         }
 
@@ -59,7 +58,8 @@
                     unique_ip.push(ele)
                 }
             }
-            //console.log(unique_ip)
+            unique_ip.sort();
+            console.log(unique_ip)
             
             //为每个设置一个frame?
             for(var i in unique_ip){
@@ -76,7 +76,8 @@
                 oIframe.setAttribute("height", "100%")
 
                 oDiv.append(oIframe);
-                document.body.append(oDiv)
+                //document.body.append(oDiv)
+                oMonitor.append(oDiv)
             }
         }
 

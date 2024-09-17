@@ -1,0 +1,30 @@
+.iframe-container {
+    width: 45%;
+    height: 460px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    float:left;
+    margin-left:20px;
+}
+.iframe-container iframe{
+    border: none;
+}
+
+#monitor::after{
+    content: '';/*必须要加的*/
+    display: block;
+    clear: both;
+}
+
+.footer{
+    min-height: 100px;
+    background-color: purple;
+    color:white;
+    padding:10px;
+    text-align: center;
+}
+
+.footer a{
+    color:white;
+}
