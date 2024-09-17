@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# MySQL 配置
+MYSQL_HOST="10.10.117.156"
+MYSQL_PORT="8070"
+MYSQL_USER="root"
+MYSQL_PASSWORD="123456"
+MYSQL_DATABASE="monitoring"
+
+# 清理超过1周的数据
+mysql -h"$MYSQL_HOST" -u"$MYSQL_USER" -P"$MYSQL_PORT" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" -e "DELETE FROM system_usage WHERE timestamp < NOW() - INTERVAL 336 HOUR;"

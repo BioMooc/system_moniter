@@ -18,7 +18,8 @@
 4. 默认
 显示最新的30条记录。
 url 支持参数: ?last=30
-
+默认删除2周前的数据：冲突点是，系统时间有差异，有的相差7个小时?!
+    怎么自动同步不同机器的系统时间？
 
 
 
@@ -126,3 +127,13 @@ http://10.10.117.156:8071/api/usage_data?start=2024-09-17%2009:00:00&end=2024-09
 
 支持设置IP
 http://10.10.117.156:8071/api/usage_data?start=2024-09-17%2009:00:00&end=2024-09-17%2010:00:00&ip=10.10.117.156
+
+
+
+5. 定期清理垃圾数据：超过2周的删除
+    select * FROM system_usage WHERE timestamp < NOW() - INTERVAL 336 HOUR;
+    DELETE FROM system_usage WHERE timestamp < NOW() - INTERVAL 336 HOUR;
+
+设置每周天晚上23点执行，删除两周前的数据：24*14=336
+$ crontab -e
+0 23 * * 0   bash /datapool/wangjl/web/docs/code/system/monitor_clean_week_ago.sh
