@@ -91,6 +91,14 @@ $ crontab -e
 */6 * * * * bash /datapool/wangjl/web/docs/code/system/monitor_CPU_RAM.sh
 ```
 
+(4) 也可以通过curl提交数据
+```
+https://github.com/louislam/uptime-kuma/issues/819
+
+curl -s "https://uk.****.com/api/push/******?status=up&msg=Disk%20usage%20is%20Fixed:${DISKUSAGE}%25"
+```
+
+
 
 3. Start web server [on one server]
 

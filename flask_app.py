@@ -35,7 +35,13 @@ def show(ip):
 
 @app.route('/api/')
 def hello():
-    return "For json data, pls visit: http://IP:%s/api_usage_data" % settings.get("sys", "port")
+    html="""
+        <p><a href="/">Go to Home page</a></p>
+        <h2>Help</h2>
+        <p class="light">http://10.10.117.156:8071/</p>
+        <p class="light">http://10.10.117.156:8071/?last=10</p>
+    """
+    return html + "For json data, pls visit: http://10.10.117.156:%s/api_usage_data" % settings.get("sys", "port")
 
 
 @app.route('/api/ip_list', methods=['GET'])

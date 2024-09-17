@@ -4,6 +4,7 @@ v0.3 ini file; ReadMe [2024.9.17]
 v0.4 add url para ?last=30; MyLib.py [2024.9.17]
 v0.5 update style [2024.9.17]
 v0.6 rm old data(>2weeks) [2024.9.17]
+v0.7 add help page; update css [2024.9.17]
 #
 # commit
 # push to https://gitee.com/dawnEve/system_moniter.git
@@ -12,3 +13,17 @@ v0.6 rm old data(>2weeks) [2024.9.17]
 todo:
 - 前台每6min刷新一次
 - 前台选择显示时间范围
+
+
+开源方案：
+https://www.reddit.com/r/selfhosted/comments/1cj6b5s/easy_tool_to_monitor_server_hardware_cpu_ram_disk/
+- Grafana
+
+* Zabbix, Nagios and CheckMK are also great if centralised monitoring is needed
+- Netdata is both heavy and not really ready for professional use so why bother.
+- Prometheus & Grafana are way too heavy for home use
+
+* Glances, dashdot, and minmon. My favorites so far
+- dashdot seems quite simple to use  https://github.com/MauriceNino/dashdot
+- CheckMK is a great alternative to Nagios and you can still use the nagios plugins if you need to
+
