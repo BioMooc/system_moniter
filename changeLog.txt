@@ -2,6 +2,7 @@ v0.1 raw model using GPT [2024.9.14]
 v0.2 try to use ini file [2024.9.17]
 v0.3 ini file; ReadMe [2024.9.17]
 v0.4 add url para ?last=30; MyLib.py [2024.9.17]
+v0.5 update style [2024.9.17]
 #
 # commit
 # push to https://gitee.com/dawnEve/system_moniter.git
