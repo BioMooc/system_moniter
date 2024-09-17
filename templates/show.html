@@ -15,12 +15,18 @@
     
     <script>
         async function fetchUsageData() {
-            var host_ip="{{host_ip}}";
             var url='/api/usage_data';
+
+            var host_ip="{{host_ip}}";
+            var last_number="{{last_number}}";
             if("" != host_ip){
-                url += "?ip="+host_ip
+                url += "?ip="+host_ip+"&last="+last_number
+            }else{
+                url += "?last="+last_number
             }
-            
+
+            //console.log("show:", url)
+
             const response = await fetch(url);
             const data = await response.json();
             // 数据格式转换
@@ -33,11 +39,11 @@
                 hostname:[]
             };
             for(var i=0; i<data.length; i++){
-                object["timestamp"].push(data[i].timestamp)
-                object["cpu_usage"].push(data[i].cpu_usage)
-                object["memory_usage"].push(data[i].memory_usage)
-                object["host_ip"].push(data[i].host_ip)
-                object["hostname"].push(data[i].hostname)
+                object["timestamp"].unshift(data[i].timestamp)
+                object["cpu_usage"].unshift(data[i].cpu_usage)
+                object["memory_usage"].unshift(data[i].memory_usage)
+                object["host_ip"].unshift(data[i].host_ip)
+                object["hostname"].unshift(data[i].hostname)
             }
                         
             return object;

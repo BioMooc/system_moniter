@@ -1,5 +1,7 @@
+html,body, div{margin:0; padding: 0;}
 .iframe-container {
-    width: 45%;
+    /*width: 45%;*/
+    width: 606px;
     height: 460px;
     border: 1px solid #eee;
     border-radius: 5px;

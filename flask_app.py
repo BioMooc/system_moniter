@@ -1,34 +1,9 @@
 from flask import Flask, jsonify, request, render_template
-import pymysql
 import datetime
-import socket
+
+from MyLib import *
 
 app = Flask(__name__)
-
-################
-# 模式设置：决定着 读取哪个配置文件
-################
-# test: 本机测试
-# pro: 生产环境
-import configparser
-settings = configparser.ConfigParser()
-settings.read("config.ini")
-#mode = settings.get("sys", "mode")
-
-# MySQL 配置
-MYSQL_HOST = settings.get("mysql", "host")
-MYSQL_PORT=int(settings.get("mysql", "port"))
-MYSQL_USER = settings.get("mysql", "user")
-MYSQL_PASSWORD = settings.get("mysql", "password")
-MYSQL_DATABASE = settings.get("mysql", "database")
-
-version = settings.get("sys", "version")
-
-
-
-
-
-
 
 
 #############################
@@ -37,31 +12,19 @@ version = settings.get("sys", "version")
 
 @app.route('/', methods = ["GET"])
 def index():
-    return render_template("index.html", version=version)
-
+    req=request.args
+    last_number = req.get("last", "30")
+    return render_template("index.html", version=version, last_number=last_number)
 
 
 @app.route('/show/<ip>', methods = ["GET"])
 def show(ip):
     # 获取参数
-    #req=request.args
-    #ip = req.get("ip", "")
-    #print("ip=%s" % ip)
+    req=request.args
+    last_number = req.get("last", "30")
+    print("last_number=%s" % last_number)
 
-    return render_template("show.html", host_ip=ip)
-
-
-
-def get_host_ip():
-    """获取主机的 IP 地址"""
-    hostname = socket.gethostname() #'jinlab-svr1.icb.ac.cn'
-    host_ip=socket.gethostbyname(hostname) #'10.10.117.156'
-    return [hostname, host_ip]
-
-
-
-
-
+    return render_template("show.html", host_ip=ip, last_number=last_number)
 
 
 
@@ -74,12 +37,26 @@ def get_host_ip():
 def hello():
     return "For json data, pls visit: http://IP:%s/api_usage_data" % settings.get("sys", "port")
 
+
+@app.route('/api/ip_list', methods=['GET'])
+def get_ip_list():
+    sql = "select distinct(host_ip) FROM system_usage;"
+    results=db_query(sql)
+    return jsonify(results) 
+
+
 @app.route('/api/usage_data', methods=['GET'])
 def get_latest_data():
+    """
+    默认显示最新的30条信息
+    """
+
     # 获取查询参数
     start_time = request.args.get('start')
     end_time = request.args.get('end')
     host_ip = request.args.get('ip', "")
+
+    last_number = int( request.args.get("last", "30") )
 
     if start_time and end_time:
         # 使用用户提供的时间段
@@ -87,19 +64,18 @@ def get_latest_data():
         query_end = datetime.datetime.strptime(end_time, '%Y-%m-%d %H:%M:%S')
     else:
         # 默认使用过去3小时
-        end_time = datetime.datetime.now()
-        start_time = end_time - datetime.timedelta(hours=3)
-        query_start = start_time
-        query_end = end_time
+        #end_time = datetime.datetime.now()
+        #start_time = end_time - datetime.timedelta(hours=3)
+        #query_start = start_time
+        #query_end = end_time
+        query_start=datetime.datetime.now()
+        query_end=query_start - datetime.timedelta(hours=3)
 
-    # 连接到 MySQL 数据库
-    db = pymysql.connect(host=MYSQL_HOST, port=MYSQL_PORT, user=MYSQL_USER, passwd=MYSQL_PASSWORD, db=MYSQL_DATABASE)
-    cursor = db.cursor()
 
     # 查询指定时间段的数据
     #query = "SELECT timestamp, cpu_usage, memory_usage FROM system_usage WHERE timestamp BETWEEN %s AND %s"
     # 查询指定时间段的数据，并添加整数形式的时间戳
-    query = """
+    sql = """
     SELECT 
         timestamp, 
         UNIX_TIMESTAMP(timestamp) AS unix_timestamp, 
@@ -110,22 +86,24 @@ def get_latest_data():
     FROM 
         system_usage 
     WHERE 
-        (timestamp BETWEEN %s AND %s)
+        1
     """
 
-    # 如果提供了 IP 参数，添加到查询条件中
+    if start_time and end_time:
+        sql += " AND (timestamp BETWEEN '%s' AND '%s')" % (query_start, query_end)
+
     if host_ip:
-        query += " AND host_ip = %s ORDER BY timestamp;"
-        cursor.execute(query, (query_start, query_end, host_ip))
+        sql += " AND (host_ip = '%s')" % host_ip
+
+    sql += " ORDER BY timestamp DESC"
+
+    if start_time and end_time:
+        pass
     else:
-        query += " ORDER BY timestamp;"
-        cursor.execute(query, (query_start, query_end))
+        sql += " limit %d;" % last_number
 
-
-    # 获取结果
-    results = cursor.fetchall()
-    cursor.close()
-    db.close()
+    #print(sql)
+    results=db_query(sql)
 
     # 格式化为字典
     data = []
