@@ -5,18 +5,38 @@ import socket
 
 app = Flask(__name__)
 
+################
+# 模式设置：决定着 读取哪个配置文件
+################
+# test: 本机测试
+# pro: 生产环境
+import configparser
+settings = configparser.ConfigParser()
+settings.read("config.ini")
+#mode = settings.get("sys", "mode")
+
 # MySQL 配置
-MYSQL_HOST = '10.10.117.156'
-MYSQL_PORT=8070
-MYSQL_USER = 'root'
-MYSQL_PASSWORD = '123456'
-MYSQL_DATABASE = 'monitoring'
+MYSQL_HOST = settings.get("mysql", "host")
+MYSQL_PORT=int(settings.get("mysql", "port"))
+MYSQL_USER = settings.get("mysql", "user")
+MYSQL_PASSWORD = settings.get("mysql", "password")
+MYSQL_DATABASE = settings.get("mysql", "database")
+
+version = settings.get("sys", "version")
 
 
+
+
+
+
+
+
+#############################
+# Action
+#############################
 
 @app.route('/', methods = ["GET"])
 def index():
-    version="0.0.1"
     return render_template("index.html", version=version)
 
 
@@ -45,13 +65,14 @@ def get_host_ip():
 
 
 
+
 #############################
 # API section
 #############################
 
 @app.route('/api/')
 def hello():
-    return "For json data, pls visit: http://10.10.117.156:8071/api_usage_data"
+    return "For json data, pls visit: http://IP:%s/api_usage_data" % settings.get("sys", "port")
 
 @app.route('/api/usage_data', methods=['GET'])
 def get_latest_data():
@@ -121,5 +142,5 @@ def get_latest_data():
     return jsonify(data)
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=8071)
+    app.run(debug=True, host='0.0.0.0', port=int(settings.get("sys", "port")) )
 

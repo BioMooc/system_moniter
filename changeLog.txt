@@ -1,9 +1,11 @@
 v0.1 raw model using GPT [2024.9.14]
 v0.2 try to use ini file [2024.9.17]
+v0.3 ini file; ReadMe [2024.9.17]
 #
 # commit
 # push to https://gitee.com/dawnEve/system_moniter.git
 
 
 todo:
-- 每6min刷新一次
+- 前台每6min刷新一次
+- 前台选择显示时间范围
