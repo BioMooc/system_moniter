@@ -1,5 +1,5 @@
-from flask import Flask, jsonify, request, render_template
-import datetime
+from flask import Flask, jsonify, request, render_template, send_from_directory
+import datetime, os
 
 from MyLib import *
 
@@ -27,6 +27,10 @@ def show(ip):
     return render_template("show.html", host_ip=ip, last_number=last_number)
 
 
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, ''),
+                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 
 #############################
