@@ -4,6 +4,8 @@ html,body, div{margin:0; padding: 0;}
 }
 .main h1, .main p{margin: 0;}
 
+.monitor{overflow:hidden;}
+
 .iframe-container {
     /*
     width: 45%;

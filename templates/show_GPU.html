@@ -1,0 +1,138 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPU and its Memory Usage</title>
+    <script src="/static/js/chart.js"></script>
+    <style>
+        canvas{ /*border:1px dashed #ccc;*/ }
+    </style>
+</head>
+<body>
+    <canvas id="usageChart" width="600" height="400"></canvas>
+
+    <script>
+        async function fetchUsageData() {
+            var url='/api/usage_data_gpu';
+
+            var host_ip="{{host_ip}}";
+            var last_number="{{last_number}}";
+            if("" != host_ip){
+                url += "?ip="+host_ip+"&last="+last_number
+            }else{
+                url += "?last="+last_number
+            }
+
+            //console.log("show:", url)
+
+            const response = await fetch(url);
+            const data = await response.json();
+            // 数据格式转换
+            var object={
+                timestamp:[],
+                gpu_usage:[],
+                gpu_temperature:[],
+                gpu_memory_usage:[],
+                
+                host_ip:[], 
+                hostname:[]
+            };
+            for(var i=0; i<data.length; i++){
+                object["timestamp"].unshift(data[i].timestamp)
+                object["gpu_usage"].unshift(data[i].gpu_usage)
+                object["gpu_temperature"].unshift(data[i].gpu_temperature)
+                object["gpu_memory_usage"].unshift(data[i].gpu_memory_usage)
+                object["host_ip"].unshift(data[i].host_ip)
+                object["hostname"].unshift(data[i].hostname)
+            }
+
+            return object;
+        }
+
+        function createChart(data) {
+            const ctx = document.getElementById('usageChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'line',
+                //绘图区
+                data: {
+                    labels: data.timestamp,
+                    datasets: [
+                        {
+                            label: 'GPU Usage (%)',
+                            data: data.gpu_usage,
+                            borderColor: 'rgba(250, 8, 146, 1)',
+                            borderWidth: 2,
+                            fill: false
+                        },
+                        {
+                            label: 'GPU Memory Usage (%)',
+                            data: data.gpu_memory_usage,
+                            borderColor: 'rgba(0, 176, 240, 1)',
+                            borderWidth: 2,
+                            fill: false
+                        },
+                        {
+                            label: 'GPU Temperature',
+                            data: data.gpu_temperature,
+                            borderColor: 'rgba(128, 128, 128, 1)',
+                            borderWidth: 2,
+                            fill: false
+                        }
+                    ]
+                },
+                
+                options: {
+                    responsive: true,
+                    // 坐标轴
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Time',
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Usage (%)'
+                            },
+                            beginAtZero: true,
+                            min:0,
+                            max:100
+                        }
+                    },
+
+                    // 图标题
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: data.hostname[0], // 主标题
+                            font: {
+                                size: 20 // 主标题字体大小
+                            }
+                        },
+                        subtitle: {
+                            display: true,
+                            text: data.host_ip[0], // 子标题
+                            font: {
+                                color: 'rgba(54, 162, 235, 1)',
+                                size: 16 // 子标题字体大小
+                            }
+                        },
+
+                        legend: {
+                            //strokeStyle: 'rgba(54, 162, 235, 100)',
+                            display: true // 显示图例
+                        }
+                    },
+
+                }
+            });
+        }
+
+        fetchUsageData().then(createChart);
+    </script>
+</body>
+</html>

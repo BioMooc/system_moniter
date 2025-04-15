@@ -13,8 +13,18 @@
         <h1>Monitor of CPU and Memory Usage</h1>
         <p>Default: show last 30 dots, 1 dot / 6 min.</p>
     </div>
-    
-    <div id="monitor"></div>
+    <div class="monitor" id="monitor"></div>
+
+    <hr>
+
+    <div class="main_gpu">
+        <h1>Monitor of GPU and its Memory Usage</h1>
+        <p>Default: show last 30 dots, 1 dot / 6 min.</p>
+    </div>
+
+    <div class="monitor" id="monitor_gpu"></div>
+
+
 
     <div class="footer">
         <p>
@@ -31,10 +41,10 @@
     <script>
         var oMonitor=document.getElementById("monitor");
         // part 1: get IP list
-        async function fetchIPList() {
-            const response = await fetch('/api/ip_list');
+        async function fetchIPList(api_path="ip_list") {
+            const response = await fetch('/api/'+api_path);
             const data = await response.json();
-            
+
             // 数据格式转换
             var ip_arr=[];
             for(var i=0; i<data.length; i++){
@@ -44,14 +54,14 @@
         }
 
         // part 2: open one panel for each IP
-        function loadFrame(unique_ip) {
+        function loadFrame(unique_ip, api_name="show", panel_container=oMonitor) {
             //获取uniq ip，并排序
             unique_ip.sort();
             console.log("unique_ip:", unique_ip)
             
             //为每个设置一个frame?
             for(var i in unique_ip){
-                var url=location.protocol + "//"+ location.host+"/show/"+ 
+                var url=location.protocol + "//"+ location.host+"/"+api_name+"/"+ 
                     unique_ip[i]+"?last="+{{last_number}}
                 console.log(i, unique_ip[i], url)
                 //
@@ -65,11 +75,19 @@
                 oIframe.setAttribute("height", "100%")
 
                 oDiv.append(oIframe);
-                oMonitor.append(oDiv)
+                panel_container.append(oDiv)
             }
         }
 
         fetchIPList().then(loadFrame);
-    </script>
+
+
+// GPU
+var oMonitor_gpu=document.getElementById("monitor_gpu");
+fetchIPList("ip_list_gpu").then(function(x){
+    loadFrame(x,"show_GPU", oMonitor_gpu)
+});
+</script>
+
 </body>
 </html>
