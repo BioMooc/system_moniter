@@ -8,4 +8,8 @@ MYSQL_PASSWORD="123456"
 MYSQL_DATABASE="monitoring"
 
 # 清理超过1周的数据
-mysql -h"$MYSQL_HOST" -u"$MYSQL_USER" -P"$MYSQL_PORT" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" -e "DELETE FROM system_usage WHERE timestamp < NOW() - INTERVAL 336 HOUR;"
+mysql -h"$MYSQL_HOST" -u"$MYSQL_USER" -P"$MYSQL_PORT" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" -e \
+    "DELETE FROM system_usage WHERE timestamp < NOW() - INTERVAL 336 HOUR;"
+
+mysql -h"$MYSQL_HOST" -u"$MYSQL_USER" -P"$MYSQL_PORT" -p"$MYSQL_PASSWORD" "$MYSQL_DATABASE" -e \
+    "DELETE FROM gpu_usage WHERE timestamp < NOW() - INTERVAL 336 HOUR;"

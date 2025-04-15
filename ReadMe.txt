@@ -7,6 +7,7 @@
 配置mysql数据库登录方式、创建表结构
 (2) 每个服务器通过crontab 运行定时脚本 monitor_CPU_RAM.sh，比如每6分钟发送数据到mysql。
 (3) 主服务器依赖Flask提供REST API，依赖 Chart.js 绘制折线图。
+https://www.chartjs.org/
 
 
 3. 端口
@@ -20,6 +21,8 @@
 url 支持参数: ?last=30
 默认删除2周前的数据：冲突点是，系统时间有差异，有的相差7个小时?!
     怎么自动同步不同机器的系统时间？
+    使用中心 api 接收信息?
+    目前使用的是 mysql 远程，需要每个server都有 mysql 客户端。
 
 
 5. How to add GPU info?

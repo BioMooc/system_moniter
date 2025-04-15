@@ -63,21 +63,27 @@
                             label: 'GPU Usage (%)',
                             data: data.gpu_usage,
                             borderColor: 'rgba(250, 8, 146, 1)',
+                            backgroundColor: 'rgba(250, 8, 146, 1)',
                             borderWidth: 2,
+                            borderDash: [3, 3],
                             fill: false
                         },
                         {
                             label: 'GPU Memory Usage (%)',
                             data: data.gpu_memory_usage,
                             borderColor: 'rgba(0, 176, 240, 1)',
+                            backgroundColor: 'rgba(0, 176, 240, 1)',
                             borderWidth: 2,
+                            borderDash: [3, 3],
                             fill: false
                         },
                         {
                             label: 'GPU Temperature',
                             data: data.gpu_temperature,
                             borderColor: 'rgba(128, 128, 128, 1)',
-                            borderWidth: 2,
+                            backgroundColor: 'rgba(128, 128, 128, 1)',
+                            borderWidth: 1,
+                            borderDash: [3, 3],
                             fill: false
                         }
                     ]

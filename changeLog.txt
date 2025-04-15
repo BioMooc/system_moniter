@@ -10,12 +10,14 @@ v0.9 add favicon.ico [2024.11.15]
 v1.0 update version [2024.11.15]
 v1.1 add GPU info to DB [2025.4.15]
 v1.2 add GPU info to html page [2025.4.15]
+v1.3 update GPU curve to dashed; add clean to gpu sql; [2025.4.15]
 #
 # commit
 # push to https://gitee.com/dawnEve/system_moniter.git
 
 
 todo:
+- 使用api后台接收数据，这样其他server不需要安装mysql客户端
 - 前台每6min刷新一次
 - 前台选择显示时间范围
 
