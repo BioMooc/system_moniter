@@ -8,6 +8,7 @@ v0.7 add help page; update css [2024.9.17]
 v0.8 update bottom repo links [2024.10.12]
 v0.9 add favicon.ico [2024.11.15]
 v1.0 update version [2024.11.15]
+v1.1 add GPU info to DB [2025.4.15]
 #
 # commit
 # push to https://gitee.com/dawnEve/system_moniter.git

@@ -22,6 +22,10 @@ url 支持参数: ?last=30
     怎么自动同步不同机器的系统时间？
 
 
+5. How to add GPU info?
+new table: 见下文 1(3B)
+
+
 
 ###############
 How to run?
@@ -59,7 +63,7 @@ CREATE TABLE system_usage (
     memory_usage FLOAT NOT NULL
 );
 
-ALTER TABLE system_usage 
+ALTER TABLE system_usage
     ADD COLUMN host_ip VARCHAR(45),
     ADD COLUMN hostname VARCHAR(100);
 ```
@@ -71,10 +75,27 @@ Check data:
 SELECT * FROM system_usage;
 
 select * FROM system_usage WHERE timestamp < NOW() - INTERVAL 1 MINUTE;
-
 ```
 
-(2) write the mysql seetings in `/config.ini` under "mysql" section.
+(3B) create table GPU
+```
+USE monitoring;
+
+CREATE TABLE gpu_usage (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    timestamp DATETIME NOT NULL,
+    gpu_usage FLOAT NOT NULL,
+    gpu_temperature FLOAT NOT NULL,
+    gpu_memory_usage FLOAT NOT NULL,
+    host_ip VARCHAR(45) NOT NULL,
+    hostname VARCHAR(100)
+);
+
+# check
+desc gpu_usage;
+```
+
+(4) write the mysql seetings in `/config.ini` under "mysql" section.
 
 
 
@@ -90,6 +111,11 @@ select * FROM system_usage WHERE timestamp < NOW() - INTERVAL 1 MINUTE;
 $ crontab -e
 */6 * * * * bash /datapool/wangjl/web/docs/code/system/monitor_CPU_RAM.sh
 ```
+
+Or use watch in tmux:
+`$ watch -n 360 bash /datapool/wangjl/web/docs/code/system/monitor_CPU_RAM.sh`
+
+
 
 (4) 也可以通过curl提交数据
 ```

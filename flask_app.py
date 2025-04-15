@@ -45,7 +45,7 @@ def hello():
         <p class="light">http://10.10.117.156:8071/</p>
         <p class="light">http://10.10.117.156:8071/?last=10</p>
     """
-    return html + "For json data, pls visit: http://10.10.117.156:%s/api_usage_data" % settings.get("sys", "port")
+    return html + "For json data, pls visit: http://10.10.117.156:%s/api/usage_data" % settings.get("sys", "port")
 
 
 @app.route('/api/ip_list', methods=['GET'])
