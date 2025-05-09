@@ -11,6 +11,7 @@ v1.0 update version [2024.11.15]
 v1.1 add GPU info to DB [2025.4.15]
 v1.2 add GPU info to html page [2025.4.15]
 v1.3 update GPU curve to dashed; add clean to gpu sql; [2025.4.15]
+v1.4 update GPU header css [2025.5.9]
 #
 # commit
 # push to https://gitee.com/dawnEve/system_moniter.git
