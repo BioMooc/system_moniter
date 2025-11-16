@@ -1,4 +1,4 @@
-*.backup
-*.dustbin
+backup/
+dustbin/
 
 __pycache__
